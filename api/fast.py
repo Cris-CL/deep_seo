@@ -17,66 +17,46 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
-q
+
 @app.get("/")
 def index():
     return {"greeting": "Hello world"}
 
-
 @app.get("/evaluation")
-def predict(title,
-            description,
-            feature,
-            category,
-            brand,
-            image):
+def predict(title,description,feature,category,brand,image):
 
-    # key = '3'
-
+    key = '3'
     len_title = len(title)
     len_description = len(description)
-    len_feature = len(feature)
-    category = ?
+    # len_feature = len(feature)
+    # category = ?
     brand_cat = 0 if brand == "" else 1
-    image = ?
+    # image = ?
+
+    data = {'title':[len_title],
+        'description':[len_description],
+        'brand':[brand_cat],
+        'image':[1]}
 
 
-data = {'key':key,
-        'title':len_title,
-        'description':len_description
-        'feature':len_feature,
-        'category':?,
-        'brand':brand_cat,
-        'image':?
-        }
+    X_pred = pd.DataFrame(data)
 
+    print(X_pred)
 
-#     X_pred = pd.DataFrame(data)
+    model = load('model.joblib')
 
-#     # X_pred = X_pred.astype({'pickup_longitude':'float64',
-#     #                'pickup_latitude':'float64',
-#     #                'dropoff_longitude':'float64',
-#     #                'dropoff_latitude':'float64',
-#     #                'passenger_count':'int64'
-#     #                })
+    prediction = model.predict(X_pred)
+    prediction=int(prediction[0])
 
-#     print(X_pred)
+    print(prediction)
+    return {'ranking':prediction}
+    # return prediction[0]
 
-#     model = load('model.joblib')
+@app.get("/test")
+def test():
+    return predict('','','','','',0)
 
-#     prediction = model.predict(X_pred)
+print(predict('','','','','',0))
 
-#     print(prediction)
-
-#     return {'ranking':prediction[0]}
-
-
-# # {'pickup_datetime':pickup_datetime,
-# #             'pickup_longitude':pickup_longitude,
-# #             'pickup_latitude':pickup_latitude,
-# #             'dropoff_longitude':dropoff_longitude,
-# #             'dropoff_latitude':dropoff_latitude,
-# #             'passenger_count':passenger_count}
-
-
-# # predict('2013-07-06 17:18:00','-73.950655','40.783282','-73.984365','40.769802','1')
+# title,description,feature,category,brand,image
+# /evaluation?key=3&title=Socks&description=Pink socks stripes&feature=Long pink sock&category=clothing&brand=uniqlo&image=2
