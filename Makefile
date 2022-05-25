@@ -55,6 +55,16 @@ pypi:
 	@twine upload dist/* -u $(PYPI_USERNAME)
 
 
+#### Run model locally
+
+PACKAGE_NAME=deep_seo
+FILENAME=trainer
+
+run_locally:
+	@python -m ${PACKAGE_NAME}.${FILENAME}
+
+
+
 ##### Prediction API - Deep SEO - - - - - - - - - - - - - - - - -
 
 run_api:
