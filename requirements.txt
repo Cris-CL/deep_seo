@@ -21,6 +21,8 @@ gcsfs
 google-cloud-storage
 mlflow
 s3fs
+uvicorn
+fastapi
 
 # utilities
 six>=1.14
@@ -28,5 +30,5 @@ joblib
 memoized-property
 termcolor
 
-#NLP
+# NLP
 nltk
