@@ -1,5 +1,6 @@
 from sklearn.svm import SVC
 from termcolor import colored
+import joblib
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import make_pipeline
@@ -54,7 +55,7 @@ class deep_seo_trainer(object):
 
 
 if __name__ == "__main__":
-    print('hello deep seo')
+    print('hello deep seo is working!!!!')
     # Get and clean data
     # df = get_data_from_gcp(nrows=N)
     # df = clean_data(df)
@@ -66,6 +67,6 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(trainer.X, trainer.y, test_size=0.3)
     # Train and save model, locally and
     trainer.run_model()
-    rmse = trainer.model.evaluate(X_test, y_test)
-    print(f"rmse: {rmse}")
+    accuracy = trainer.model.score(X_test, y_test)
+    print(f"accuracy: {accuracy}")
     trainer.save_model_locally()
