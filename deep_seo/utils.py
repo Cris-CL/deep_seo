@@ -141,5 +141,6 @@ def bad_brand(df):
 
     df4=df3[df3["value_counts"]>1]
     df_tmp = df4.query("main_ranking_3 > 1500")
+    for brandpop in df_tmp["brand"]:
         a.append(brandpop)
     return a
