@@ -2,7 +2,7 @@ import os
 import json
 import gzip
 import pandas as pd
-from deep_seo.utils import cleandata, clean_tags
+from deep_seo.utils import cleandata, clean_tags, featureclean
 
 def get_computer_data():
     current_dir =os.path.dirname(__file__)
@@ -40,5 +40,6 @@ def get_telephone_data():
                 'main_ranking_3',
                 'numb_rankings']]
     df_new['clean_description'] = df_new['description'].map(clean_tags)
+    df_new['clean_feature'] = df_new['feature'].map(featureclean)
+    df_new['rank_binss'] = pd.cut(df_new['main_ranking_3'], bins = 10, labels=[i for i in range(1,11)],include_lowest=True).astype('str')
     return df_new
-    
