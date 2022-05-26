@@ -80,7 +80,7 @@ def super_popular_brand(df):
     a=[]
 
     df4=df3[df3["value_counts"]>1]
-    df_tmp = df4[df4["main_ranking_3"]<= 100]
+    df_tmp = df4.query("0 < main_ranking_3 <= 100")     #[df4["main_ranking_3"]<= 100]
     for brandpop in df_tmp["brand"]:
         a.append(brandpop)
     return a
@@ -95,7 +95,7 @@ def popular_brand(df):
     a=[]
 
     df4=df3[df3["value_counts"]>1]
-    df_tmp = df4[df4["main_ranking_3"]<= 500]
+    df_tmp = df4.query("100 < main_ranking_3 <= 500")
     for brandpop in df_tmp["brand"]:
         a.append(brandpop)
     return a
@@ -110,7 +110,7 @@ def good_brand(df):
     a=[]
 
     df4=df3[df3["value_counts"]>1]
-    df_tmp = df4[df4["main_ranking_3"]<= 1000]
+    df_tmp = df4.query("500 < main_ranking_3 <= 1000")
     for brandpop in df_tmp["brand"]:
         a.append(brandpop)
     return a
@@ -125,7 +125,7 @@ def normal_brand(df):
     a=[]
 
     df4=df3[df3["value_counts"]>1]
-    df_tmp = df4[df4["main_ranking_3"]<= 1500]
+    df_tmp = df4.query("1000 < main_ranking_3 <= 1500")
     for brandpop in df_tmp["brand"]:
         a.append(brandpop)
     return a
@@ -140,7 +140,6 @@ def bad_brand(df):
     a=[]
 
     df4=df3[df3["value_counts"]>1]
-    df_tmp = df4[df4["main_ranking_3"]>1500]
-    for brandpop in df_tmp["brand"]:
+    df_tmp = df4.query("main_ranking_3 > 1500")
         a.append(brandpop)
     return a
