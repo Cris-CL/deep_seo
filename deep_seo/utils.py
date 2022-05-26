@@ -65,3 +65,6 @@ def cleandata(df5):
 
 def clean_tags(txt):
     return txt.replace('<br>','').replace('<b>','').replace('</br>','').replace('</b>','').replace('"','').replace("'",'').replace(',','').replace('[','').replace(']','').replace('&amp','')
+
+def featureclean(cols):
+    return cols.replace("[]","na").strip("[]'").lower()
