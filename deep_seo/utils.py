@@ -68,3 +68,79 @@ def clean_tags(txt):
 
 def featureclean(cols):
     return cols.replace("[]","na").strip("[]'").lower()
+
+
+def super_popular_brand(df):
+    df_brand=df[["brand","main_ranking_3"]].copy()
+    count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
+    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
+    df3=df3.rename(columns={0:"value_counts"})
+
+    a=[]
+
+    df4=df3[df3["value_counts"]>1]
+    df_tmp = df4[df4["main_ranking_3"]<= 100]
+    for brandpop in df_tmp["brand"]:
+        a.append(brandpop)
+    return a
+
+def popular_brand(df):
+    df_brand=df[["brand","main_ranking_3"]].copy()
+    count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
+    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
+    df3=df3.rename(columns={0:"value_counts"})
+
+    a=[]
+
+    df4=df3[df3["value_counts"]>1]
+    df_tmp = df4[df4["main_ranking_3"]<= 500]
+    for brandpop in df_tmp["brand"]:
+        a.append(brandpop)
+    return a
+
+def good_brand(df):
+    df_brand=df[["brand","main_ranking_3"]].copy()
+    count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
+    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
+    df3=df3.rename(columns={0:"value_counts"})
+
+    a=[]
+
+    df4=df3[df3["value_counts"]>1]
+    df_tmp = df4[df4["main_ranking_3"]<= 1000]
+    for brandpop in df_tmp["brand"]:
+        a.append(brandpop)
+    return a
+
+def normal_brand(df):
+    df_brand=df[["brand","main_ranking_3"]].copy()
+    count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
+    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
+    df3=df3.rename(columns={0:"value_counts"})
+
+    a=[]
+
+    df4=df3[df3["value_counts"]>1]
+    df_tmp = df4[df4["main_ranking_3"]<= 1500]
+    for brandpop in df_tmp["brand"]:
+        a.append(brandpop)
+    return a
+
+def bad_brand(df):
+    df_brand=df[["brand","main_ranking_3"]].copy()
+    count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
+    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
+    df3=df3.rename(columns={0:"value_counts"})
+
+    a=[]
+
+    df4=df3[df3["value_counts"]>1]
+    df_tmp = df4[df4["main_ranking_3"]>1500]
+    for brandpop in df_tmp["brand"]:
+        a.append(brandpop)
+    return a
