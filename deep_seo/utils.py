@@ -61,3 +61,7 @@ def cleandata(df5):
     df6["rank1"]=df6["rank1"].astype("int64")
     df6["rank_cat"]=df6["rank1"].map(lambda x: 1 if x<473359 else 0)
     return df6
+
+
+def clean_tags(txt):
+    return txt.replace('<br>','').replace('<b>','').replace('</br>','').replace('</b>','').replace('"','').replace("'",'').replace(',','').replace('[','').replace(']','').replace('&amp','')
