@@ -3,6 +3,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
 
 def punc(x):
     for i in string.punctuation:
@@ -73,7 +74,7 @@ def featureclean(cols):
 def super_popular_brand(df):
     df_brand=df[["brand","main_ranking_3"]].copy()
     count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
-    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    min_df=pd.DataFrame(df.groupby("brand").min()["main_ranking_3"])
     df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
     df3=df3.rename(columns={0:"value_counts"})
 
@@ -88,7 +89,7 @@ def super_popular_brand(df):
 def popular_brand(df):
     df_brand=df[["brand","main_ranking_3"]].copy()
     count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
-    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    min_df=pd.DataFrame(df.groupby("brand").min()["main_ranking_3"])
     df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
     df3=df3.rename(columns={0:"value_counts"})
 
@@ -103,7 +104,7 @@ def popular_brand(df):
 def good_brand(df):
     df_brand=df[["brand","main_ranking_3"]].copy()
     count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
-    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    min_df=pd.DataFrame(df.groupby("brand").min()["main_ranking_3"])
     df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
     df3=df3.rename(columns={0:"value_counts"})
 
@@ -118,7 +119,7 @@ def good_brand(df):
 def normal_brand(df):
     df_brand=df[["brand","main_ranking_3"]].copy()
     count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
-    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    min_df=pd.DataFrame(df.groupby("brand").min()["main_ranking_3"])
     df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
     df3=df3.rename(columns={0:"value_counts"})
 
@@ -133,7 +134,7 @@ def normal_brand(df):
 def bad_brand(df):
     df_brand=df[["brand","main_ranking_3"]].copy()
     count_df=pd.DataFrame(df_brand[["brand"]].value_counts())
-    min_df=pd.DataFrame(df_new.groupby("brand").min()["main_ranking_3"])
+    min_df=pd.DataFrame(df.groupby("brand").min()["main_ranking_3"])
     df3=count_df.merge(min_df,on="brand").sort_values("main_ranking_3").reset_index()
     df3=df3.rename(columns={0:"value_counts"})
 
@@ -144,3 +145,25 @@ def bad_brand(df):
     for brandpop in df_tmp["brand"]:
         a.append(brandpop)
     return a
+
+def brand_categorical(df):
+    super_popular = super_popular_brand(df)
+    popular_brands = popular_brand(df)
+    good = good_brand(df)
+    normal = normal_brand(df)
+    bad_brands = bad_brand(df)
+
+    def which_brand(brand_name):
+        if brand_name in super_popular:
+            return 1
+        elif brand_name in popular_brands:
+            return 2
+        elif brand_name in good:
+            return 3
+        elif brand_name in normal:
+            return 4
+        elif brand_name in bad_brands:
+            return 5
+        return 3
+    df['brand_cat'] = df['brand'].map(which_brand)
+    return df
