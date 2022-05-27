@@ -164,6 +164,7 @@ def brand_categorical(df):
             return 4
         elif brand_name in bad_brands:
             return 5
-        return 3
+        ## if is not in any of the lists by default puts them in the normal category
+        return 4
     df['brand_cat'] = df['brand'].map(which_brand)
     return df
