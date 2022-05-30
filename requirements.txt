@@ -5,9 +5,9 @@ twine
 wheel>=0.29
 
 # data science
-numpy
-pandas
-scikit-learn
+numpy==1.22.4
+pandas==1.4.2
+scikit-learn==1.1.1
 
 # tests/linter
 black
@@ -20,9 +20,9 @@ yapf
 gcsfs
 google-cloud-storage
 mlflow
-s3fs
-uvicorn
-fastapi
+s3fs==2022.5.0
+uvicorn==0.17.6
+fastapi==0.78.0
 
 # utilities
 six>=1.14
@@ -31,4 +31,4 @@ memoized-property
 termcolor
 
 # NLP
-nltk
+nltk==3.7
