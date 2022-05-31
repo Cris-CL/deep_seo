@@ -7,7 +7,10 @@ from sklearn.pipeline import make_pipeline
 from sklearn.pipeline import make_union
 from sklearn.compose import make_column_transformer
 from sklearn.model_selection import train_test_split
-from deep_seo.data import get_computer_data
+from deep_seo.data import get_computer_data, get_telephone_data
+from deep_seo.utils import prepare_nlp
+from tensorflow.keras import load_model
+import os
 
 
 class deep_seo_trainer(object):
@@ -22,6 +25,9 @@ class deep_seo_trainer(object):
         self.X = self.data[["brand_cat","title_count","desc_count","img_count"]]
         self.y = self.data["rank_cat"]
         self.model = None
+        self.tel_data = get_telephone_data()
+        self.X_tel = self.tel_data[['title','clean_description','clean_feature','brand_cat']]
+        self.y_tel =self.tel_data['rank_binss']
 
 
     def run_model(self):
@@ -47,6 +53,29 @@ class deep_seo_trainer(object):
 
         self.model = model_svc
 
+    def init_nlp_model(self):
+
+        ## Load deep learning model
+        current_dir =os.path.dirname(__file__)
+        model_path = os.path.join(current_dir,'..', 'model')
+        self.model = load_model(os.path.join(model_path,'cris_model_nlp.h5'))
+
+        tokenizer, X_2_pad, y_2_cat, brands_and_cat, vocab_size = prepare_nlp(self.tel_data)
+        self.tokenizer = tokenizer
+        self.brand_cat = brands_and_cat
+        self.vocab_s = vocab_size
+        self.X_2 = X_2_pad
+        self.y_cat = y_2_cat
+
+        return self
+
+
+
+
+
+
+
+
     def save_model_locally(self):
         """Save the model into a .joblib format"""
         joblib.dump(self.model, 'model.joblib')
@@ -56,11 +85,7 @@ class deep_seo_trainer(object):
 
 if __name__ == "__main__":
     print('hello deep seo is working!!!!')
-    # Get and clean data
-    # df = get_data_from_gcp(nrows=N)
-    # df = clean_data(df)
-    # y = df["fare_amount"]
-    # X = df.drop("fare_amount", axis=1)
+
 
     trainer = deep_seo_trainer()
 
