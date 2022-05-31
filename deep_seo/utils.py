@@ -7,8 +7,8 @@ import pandas as pd
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import layers, Sequential
 
 def punc(x):
@@ -191,7 +191,7 @@ def prepare_nlp(df_new):
         brands_and_cat = rank_less_3k[['brand','brand_cat']]
 
         X_sum = pd.DataFrame(title_3k + desc_3k + feat_3k )
-        X_sum = X_sum.to_numpy()
+        X_sum = X_sum[0].to_numpy()
 
         y_2 = np.array(rank_less_3k['rank_binss_2'].astype('int8'))
 
