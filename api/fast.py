@@ -12,17 +12,22 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import pad_sequences
 from deep_seo.trainer import deep_seo_trainer as trainer
+import os
 
 
 app = FastAPI()
 
-## DL model initializer
-train_seo = trainer()
-model_ini = train_seo.init_nlp_model()
-model = train_seo.model
-tokenizer_seo = train_seo.tokenizer
+# ## DL model initializer
+# train_seo = trainer()
+# model_ini = train_seo.init_nlp_model()
+# model = train_seo.model
+# tokenizer_seo = train_seo.tokenizer
 
+current_dir =os.path.dirname(__file__)
+model_path = os.path.join(current_dir,'..', 'model')
 
+model = load_model(os.path.join(model_path,'cris_model_nlp.h5'))
+tokenizer_seo = load(os.path.join(model_path,'token.joblib'))
 
 app.add_middleware(
     CORSMiddleware,
@@ -106,4 +111,5 @@ def test():
 
 
 
-# predict_seo('fake title for a fake product ','this description is awesome ', 'I have no features')
+
+print(predict_seo('fake title for a fake product ','this description is awesome ', 'I have no features'))
