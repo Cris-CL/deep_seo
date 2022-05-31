@@ -31,6 +31,7 @@ def get_telephone_data():
     current_dir =os.path.dirname(__file__)
     raw_data_path = os.path.join(current_dir,'..', 'raw_data')
     df = pd.read_csv(os.path.join(raw_data_path,'meta_cellphone_100k.csv'))
+
     df_new = df[['category',
                 'description',
                 'title',
@@ -43,6 +44,6 @@ def get_telephone_data():
     df_new['clean_feature'] = df_new['feature'].map(featureclean)
     df_new['rank_binss'] = pd.cut(df_new['main_ranking_3'], bins = 10, labels=[i for i in range(1,11)],include_lowest=True).astype('str')
     df_new = brand_categorical(df_new)
-    return df_new
 
-print(get_telephone_data().head())
+
+    return df_new

@@ -4,6 +4,12 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
+import numpy as np
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import layers, Sequential
 
 def punc(x):
     for i in string.punctuation:
@@ -168,3 +174,32 @@ def brand_categorical(df):
         return 4
     df['brand_cat'] = df['brand'].map(which_brand)
     return df
+
+
+##### Deep Learning #####
+
+def prepare_nlp(df_new):
+
+        rank_less_3k = df_new.query('main_ranking_3 < 3000')
+        rank_less_3k['rank_binss_2'] = pd.cut(rank_less_3k['main_ranking_3'], bins = 10, labels=[i for i in range(0,10)],include_lowest=True).astype('int')
+
+        title_3k = np.array(rank_less_3k['title'])
+        desc_3k = np.array(rank_less_3k['clean_description'])
+        feat_3k = np.array(rank_less_3k['clean_feature'])
+        brand_3k = np.array(rank_less_3k['brand'])
+
+        brands_and_cat = rank_less_3k[['brand','brand_cat']]
+
+        X_sum = pd.DataFrame(title_3k + desc_3k + feat_3k )
+        X_sum = X_sum.to_numpy()
+
+        y_2 = np.array(rank_less_3k['rank_binss_2'].astype('int8'))
+
+        tokenizer = Tokenizer()
+        tokenizer.fit_on_texts(X_sum)
+        vocab_size = len(tokenizer.word_index)
+        X_token_2 = tokenizer.texts_to_sequences(X_sum)
+        X_2_pad = pad_sequences(X_token_2, dtype='float32', padding='post')
+        y_2_cat = to_categorical(y_2,num_classes=10)
+
+        return tokenizer, X_2_pad, y_2_cat, brands_and_cat, vocab_size
