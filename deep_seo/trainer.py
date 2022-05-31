@@ -9,7 +9,7 @@ from sklearn.compose import make_column_transformer
 from sklearn.model_selection import train_test_split
 from deep_seo.data import get_computer_data, get_telephone_data
 from deep_seo.utils import prepare_nlp
-from tensorflow.keras import load_model
+from tensorflow.keras.models import load_model
 import os
 
 
@@ -68,12 +68,6 @@ class deep_seo_trainer(object):
         self.y_cat = y_2_cat
 
         return self
-
-
-
-
-
-
 
 
     def save_model_locally(self):
