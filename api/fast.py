@@ -9,26 +9,20 @@ from datetime import datetime
 import pytz
 import pandas as pd
 import numpy as np
+from tensorflow.keras import layers,losses,models
 from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import pad_sequences
+from deep_seo.nlp_func import nlp_amazon
 from deep_seo.utils import url_predict_rank
 import os
-
 app = FastAPI()
-
-# ## DL model initializer
-# train_seo = trainer()
-# model_ini = train_seo.init_nlp_model()
-# model = train_seo.model
-# tokenizer_seo = train_seo.tokenizer
 
 ## Model Loading at the beginning of the api execution
 
 current_dir =os.path.dirname(__file__)
 model_path = os.path.join(current_dir,'..', 'model')
 
-model = load_model(os.path.join(model_path,'model_nlp.h5'))
-tokenizer_seo = load(os.path.join(model_path,'token.joblib'))
+nlp_model = nlp_amazon()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,12 +42,9 @@ def predict(title,description,feature,category,brand,image):
     key = '3'
     len_title = len(title)
     len_description = len(description)
-    # len_feature = len(feature)
-    # category = ?
+    len_feature = len(feature)
 
-    brand_cat = 0 if brand == "" else 1
 
-    # image = ?
 
     data = {'title':[len_title],
         'description':[len_description],
@@ -75,30 +66,46 @@ def predict(title,description,feature,category,brand,image):
     # return prediction[0]
 
 @app.get("/seo_eval")
-def predict_seo(title,description,feature,imageone, imagetwo,imagethree):
+def predict_seo(title,description,feature,imageone,imagetwo,imagethree):
 
-    key = '3'
-    len_title = len(title)
-    len_description = len(description)
+    def eval_info(title,description,feature):
+        len_title = len(title)
+        len_description = len(description)
+        len_feature = len(feature)
+        sum_len = len_title + len_description + len_feature
+        if sum_len < 200:
+            return 10
+        else:
+            data = pd.DataFrame({'title':[title + ' '],
+                                 'description':[description + ' '],
+                                 'feature':[feature + ' '],})
 
+            result = nlp_model.predict_category(data)
+            return result
 
-    data = pd.DataFrame({'title':[title+' '],
-                             'description':[description+' '],
-                             'feature':[feature+' '],})
+    result = eval_info(title,description,feature)
 
-    X_pred = np.array(data['title'] + data['description'] + data['feature'])
+    print(result)
 
-    X_pred_token = tokenizer_seo.texts_to_sequences(X_pred)
-    X_pred_pad = pad_sequences(X_pred_token, dtype='float32', padding='post', maxlen=3278)
-
-    prediction = model.predict(X_pred_pad)
-
-    result = np.argmax(prediction)
 
     class_names = ['rankeight', 'rankfive', 'rankfour', 'ranknine', 'rankone', 'rankseven', 'ranksix', 'rankten', 'rankthree', 'ranktwo']
     current_dir =os.path.dirname(__file__)
     model_path = os.path.join(current_dir,'..', 'imagemodel')
-    model_img = load_model(os.path.join(model_path,'imagemodelfinal.h5'))
+
+    model_0 = load_model(os.path.join(model_path,'imagecnnmodeltwo.h5'))
+
+    resize = layers.experimental.preprocessing.Resizing(200, 200)
+    rescale = layers.experimental.preprocessing.Rescaling(1./255)
+
+    model_img = models.Sequential([
+        resize,
+        model_0])
+
+    model_img.compile(
+        optimizer='adam',
+        loss=losses.SparseCategoricalCrossentropy(from_logits=False),
+        metrics=['accuracy']
+        )
 
     image_arr_one=url_predict_rank(imageone)
     predictions = model_img.predict(image_arr_one)
@@ -126,3 +133,19 @@ def test():
 # title,description,feature,category,brand,image
 # /evaluation?key=3&title=Socks&description=Pink socks stripes&feature=Long pink sock&category=clothing&brand=uniqlo&image=2
 # /seo_eval?title=fake title for a fake product &description=this description is awesome&feature=I have no features&imageone=https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg&imagetwo=https://m.media-amazon.com/images/I/81MLO3k15iL._AC_SL1500_.jpg&imagethree=https://m.media-amazon.com/images/I/71HiwDwAcoL._AC_SL1500_.jpg
+
+# current_dir =os.path.dirname(__file__)
+# model_path = os.path.join(current_dir,'..', 'imagemodel')
+# model_img = load_model(os.path.join(model_path,'imagemodelfinal.h5'))
+
+
+# model_img.summary()
+
+
+# title="amazing"
+# description="phone"
+# feature="blue"
+# imageone="https://m.media-amazon.com/images/I/712l1g8T3mL._AC_SL1500_.jpg"
+# imagetwo="https://m.media-amazon.com/images/I/41YiGeQW5HL._AC_.jpg"
+# imagethree="https://m.media-amazon.com/images/I/712l1g8T3mL._AC_SL1500_.jpg"
+# predict_seo(title,description,feature,imageone, imagetwo,imagethree)

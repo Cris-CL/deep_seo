@@ -16,6 +16,7 @@ import os
 class deep_seo_trainer(object):
 
     def __init__(self):
+
         """
             X: pandas DataFrame
             y: pandas Series
