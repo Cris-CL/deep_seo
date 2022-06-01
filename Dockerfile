@@ -4,6 +4,8 @@ COPY requirements.txt ./
 COPY api ./api
 COPY deep_seo ./deep_seo
 COPY model.joblib ./
+COPY model ./model
+COPY imagemodel ./imagemodel
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
