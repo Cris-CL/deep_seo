@@ -12,7 +12,8 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import pad_sequences
 from deep_seo.trainer import deep_seo_trainer as trainer
-
+from deep_seo.utils import url_predict_rank
+import os
 
 app = FastAPI()
 
@@ -69,7 +70,7 @@ def predict(title,description,feature,category,brand,image):
     # return prediction[0]
 
 @app.get("/seo_eval")
-def predict_seo(title,description,feature):
+def predict_seo(title,description,feature,imageone, imagetwo,imagethree):
 
     key = '3'
     len_title = len(title)
@@ -89,11 +90,27 @@ def predict_seo(title,description,feature):
 
     result = np.argmax(prediction)
 
+    class_names = ['rankeight', 'rankfive', 'rankfour', 'ranknine', 'rankone', 'rankseven', 'ranksix', 'rankten', 'rankthree', 'ranktwo']
+    current_dir =os.path.dirname(__file__)
+    model_path = os.path.join(current_dir,'..', 'imagemodel')
+    model_img = load_model(os.path.join(model_path,'imagemodelfinal.h5'))
 
-    return {'Classification': str(result)}
+    image_arr_one=url_predict_rank(imageone)
+    predictions = model_img.predict(image_arr_one)
+    predicted_class_one = class_names[np.argmax(predictions[0])]
+    print(predicted_class_one)
 
+    image_arr_two=url_predict_rank(imagetwo)
+    predictions = model_img.predict(image_arr_two)
+    predicted_class_two = class_names[np.argmax(predictions[0])]
+    print(predicted_class_two)
 
+    image_arr_three=url_predict_rank(imagethree)
+    predictions = model_img.predict(image_arr_three)
+    predicted_class_three = class_names[np.argmax(predictions[0])]
+    print(predicted_class_three)
 
+    return {'Classification': str(result), 'Rank Image 1': predicted_class_one, 'Rank Image 2': predicted_class_two, 'Rank Image 3': predicted_class_three}
 
 
 @app.get("/test")
@@ -103,7 +120,8 @@ def test():
 
 # title,description,feature,category,brand,image
 # /evaluation?key=3&title=Socks&description=Pink socks stripes&feature=Long pink sock&category=clothing&brand=uniqlo&image=2
+# /seo_eval?title=fake title for a fake product &description=this description is awesome&feature=I have no features&imageone=https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg&imagetwo=https://m.media-amazon.com/images/I/81MLO3k15iL._AC_SL1500_.jpg&imagethree=https://m.media-amazon.com/images/I/71HiwDwAcoL._AC_SL1500_.jpg
 
 
 
-# predict_seo('fake title for a fake product ','this description is awesome ', 'I have no features')
+# predict_seo('fake title for a fake product ','this description is awesome ', 'I have no features',"https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg")

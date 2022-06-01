@@ -10,6 +10,8 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import layers, Sequential
+from skimage import io
+import tensorflow as tf
 
 def punc(x):
     for i in string.punctuation:
@@ -203,3 +205,12 @@ def prepare_nlp(df_new):
         y_2_cat = to_categorical(y_2,num_classes=10)
 
         return tokenizer, X_2_pad, y_2_cat, brands_and_cat, vocab_size
+
+
+def url_predict_rank(url):
+        image_array = io.imread(url)
+        img_array = tf.keras.preprocessing.image.img_to_array(image_array)
+        img_array = tf.expand_dims(img_array, 0)
+        return img_array
+
+# url_predict_rank("https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg")
