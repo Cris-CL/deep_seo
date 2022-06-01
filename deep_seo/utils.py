@@ -213,4 +213,4 @@ def url_predict_rank(url):
         img_array = tf.expand_dims(img_array, 0)
         return img_array
 
-# url_predict_rank("https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg")
+# url_predict_rank("https://m.media-amazon.com/images/I/712l1g8T3mL._AC_SL1500_.jpg")
