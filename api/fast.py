@@ -11,19 +11,24 @@ import pandas as pd
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import pad_sequences
-from deep_seo.trainer import deep_seo_trainer as trainer
 from deep_seo.utils import url_predict_rank
 import os
 
 app = FastAPI()
 
-## DL model initializer
-train_seo = trainer()
-model_ini = train_seo.init_nlp_model()
-model = train_seo.model
-tokenizer_seo = train_seo.tokenizer
+# ## DL model initializer
+# train_seo = trainer()
+# model_ini = train_seo.init_nlp_model()
+# model = train_seo.model
+# tokenizer_seo = train_seo.tokenizer
 
+## Model Loading at the beginning of the api execution
 
+current_dir =os.path.dirname(__file__)
+model_path = os.path.join(current_dir,'..', 'model')
+
+model = load_model(os.path.join(model_path,'model_nlp.h5'))
+tokenizer_seo = load(os.path.join(model_path,'token.joblib'))
 
 app.add_middleware(
     CORSMiddleware,
@@ -121,7 +126,3 @@ def test():
 # title,description,feature,category,brand,image
 # /evaluation?key=3&title=Socks&description=Pink socks stripes&feature=Long pink sock&category=clothing&brand=uniqlo&image=2
 # /seo_eval?title=fake title for a fake product &description=this description is awesome&feature=I have no features&imageone=https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg&imagetwo=https://m.media-amazon.com/images/I/81MLO3k15iL._AC_SL1500_.jpg&imagethree=https://m.media-amazon.com/images/I/71HiwDwAcoL._AC_SL1500_.jpg
-
-
-
-# predict_seo('fake title for a fake product ','this description is awesome ', 'I have no features',"https://cdn-image02.casetify.com/usr/4787/34787/~v3/22690451x2_iphone13_16003249.png.1000x1000-w.m80.jpg")
