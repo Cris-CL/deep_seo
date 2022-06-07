@@ -1,10 +1,23 @@
-# Data analysis
-- Document here the project: deep_seo
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+# Deep SEO
 
-Please document the project the better you can.
+- Description: Final project for Le Wagon Tokyo Bootcamp, for this project we developed 2 deep learning models using Tensorflow Keras to analize the listing of a product in Amazon USA marketplace to evaluate the quality of the SEO (Search Engine Optimization) for a new product in the category of Cellphones and Accessories, taking as features in the first place Text that is analized with a RNN model and images throught a CNN model, in both cases the output we look to predict is the product selling ranking that was divided in 10 categories wich both models classify the Text features and Image features. 
+
+- Backend : 
+  - Tensorflow Keras
+  - Fast API
+  - Uvicorn
+  - Docker
+  - GCP
+- Frontend:
+  - Streamlit
+  - Heroku 
+- Data Source: https://nijianmo.github.io/amazon/index.html
+- Authors:
+  - <a href="https://github.com/Elizabeth-kok">Elizabeth Kok</a>
+  - <a href="https://github.com/na0young124">Nayoung Kim</a>
+  - <a href="https://github.com/Cris-CL">Cristobal Cepeda</a>
+
+<a href="https://deep-seo-app.herokuapp.com/">Deep SEO Heroku app</a>
 
 # Startup the project
 
